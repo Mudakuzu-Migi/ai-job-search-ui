@@ -376,13 +376,10 @@ export class QueueService {
   async completeJobAndDelete(dto: CompleteJobDto): Promise<JobMutationResult> {
     const job = await this.findOneById(dto.id);
 
-    if (isJsonObject(dto.result)) {
-      job.result = dto.result;
+    if (isJsonObject(job.result)) {
       job.status = JobStatus.COMPLETED;
       await this.jobRepository.save(job);
     }
-
-    await this.jobRepository.delete({ id: job.id });
 
     Logger.log(`completeJobAndDelete id=${job.id}`, 'QueueService');
 

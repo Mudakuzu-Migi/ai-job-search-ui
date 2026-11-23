@@ -130,12 +130,16 @@ export class TaskOrchestratorService implements OnModuleDestroy {
 
       await processor(taskId);
 
-      await this.queueService.completeJobAndDelete({ id: taskId });
+      await this.queueService.completeJobAndDelete({
+        id: taskId
+      });
 
       Logger.log(
         `Task ${taskId} completed and removed from the database`,
         CONTEXT,
       );
+
+     
     } catch (error) {
       await this.reportFailure(taskId, claimedType, error);
     } finally {

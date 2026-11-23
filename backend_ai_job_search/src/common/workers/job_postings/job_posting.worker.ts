@@ -46,6 +46,8 @@ export class JobPostingWorker {
       this.logger.log(
         `Job posting task ${taskId}: new=${result.new_vacs_job_keys.length} duplicate=${result.dub_vacs_job_keys.length}`,
       );
+      
+      this.queueService.updateJob({ id: taskId, result: result });
 
       return result;
     } catch (error) {
