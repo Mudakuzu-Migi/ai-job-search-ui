@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import {
+  JobPostingWorker,
   TexTemplateProcessingWorker,
   Workers,
 } from '@/common/workers/index.js';
@@ -20,6 +21,7 @@ export class WorkerRegistry {
   constructor(
     private readonly workers: Workers,
     private readonly texTemplateProcessingWorker: TexTemplateProcessingWorker,
+    private readonly jobPostingWorker: JobPostingWorker,
   ) {
     this.register('vacancy_processing', (taskId: string) =>
        this.workers.test(taskId),
@@ -27,6 +29,11 @@ export class WorkerRegistry {
     this.register('tex_template_processing', (taskId: string) =>
       this.texTemplateProcessingWorker.process(taskId),
     );
+    // The worker returns the job-key report; the task contract is void, so the
+    // report is left to the worker's log and any direct caller of the worker.
+    this.register('job_posting_processing', async (taskId: string) => {
+      await this.jobPostingWorker.process(taskId);
+    });
   }
   // -------------------------------------------------------------- register
 
