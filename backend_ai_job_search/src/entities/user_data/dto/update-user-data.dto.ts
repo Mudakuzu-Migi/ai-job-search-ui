@@ -24,14 +24,12 @@ export class UpdateUserDataDto extends UserDataIdDto {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @MaxLength(512)
-  resume_template_url?: string; // URL of the resume template
+  cv_template?: string; // CV / resume template content
 
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  @MaxLength(512)
-  cover_template_url?: string; // URL of the cover letter template
+  cover_template?: string; // Cover letter template content
 
   @IsOptional()
   @IsString()

@@ -53,8 +53,8 @@ export class UserDataService {
   > = [
     'user_name',
     'sources_research',
-    'resume_template_url',
-    'cover_template_url',
+    'cv_template',
+    'cover_template',
     'email',
     'phone',
     'address',
@@ -225,25 +225,23 @@ export class UserDataService {
   }
 
   @Measure('UserDataService')
-  async updateUserDataResumeTemplateUrl(
+  async updateUserDataCvTemplate(
     id: string,
-    url: string,
+    template: string,
   ): Promise<UserDataMutationResult> {
-    this.assertNonEmptyString(url, 'resume_template_url');
-    this.assertMaxLength(url, 512, 'resume_template_url');
+    this.assertNonEmptyString(template, 'cv_template');
 
-    return this.applyUpdate(id, { resume_template_url: url });
+    return this.applyUpdate(id, { cv_template: template });
   }
 
   @Measure('UserDataService')
-  async updateUserDataCoverTemplateUrl(
+  async updateUserDataCoverTemplate(
     id: string,
-    url: string,
+    template: string,
   ): Promise<UserDataMutationResult> {
-    this.assertNonEmptyString(url, 'cover_template_url');
-    this.assertMaxLength(url, 512, 'cover_template_url');
+    this.assertNonEmptyString(template, 'cover_template');
 
-    return this.applyUpdate(id, { cover_template_url: url });
+    return this.applyUpdate(id, { cover_template: template });
   }
 
   @Measure('UserDataService')

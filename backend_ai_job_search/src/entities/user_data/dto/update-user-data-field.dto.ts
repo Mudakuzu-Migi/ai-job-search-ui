@@ -22,18 +22,16 @@ export class UpdateUserNameDto extends UserDataIdDto {
   user_name: string; // Name of the user the data belongs to
 }
 
-export class UpdateResumeTemplateUrlDto extends UserDataIdDto {
+export class UpdateCvTemplateDto extends UserDataIdDto {
   @IsString()
   @IsNotEmpty()
-  @MaxLength(512)
-  resume_template_url: string; // URL of the resume template
+  cv_template: string; // CV / resume template content
 }
 
-export class UpdateCoverTemplateUrlDto extends UserDataIdDto {
+export class UpdateCoverTemplateDto extends UserDataIdDto {
   @IsString()
   @IsNotEmpty()
-  @MaxLength(512)
-  cover_template_url: string; // URL of the cover letter template
+  cover_template: string; // Cover letter template content
 }
 
 export class UpdateEmailDto extends UserDataIdDto {

@@ -26,13 +26,11 @@ export class CreateUserDataDto {
 
   @IsString()
   @IsNotEmpty()
-  @MaxLength(512)
-  resume_template_url: string; // URL of the resume template
+  cv_template: string; // CV / resume template content
 
   @IsString()
   @IsNotEmpty()
-  @MaxLength(512)
-  cover_template_url: string; // URL of the cover letter template
+  cover_template: string; // Cover letter template content
 
   @IsString()
   @IsNotEmpty()

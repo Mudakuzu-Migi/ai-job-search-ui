@@ -1,15 +1,19 @@
-# User Data Markdown MCP Tools
+# User Data MCP Tools
 
-MCP entry points for the markdown documents stored on a `user_data` record.
-They are generated from the existing `UserDataService`
-(`src/entities/user_data/ud.service.ts`); no duplicate persistence or HTTP
-client is introduced.
+MCP entry points for the markdown documents and the free-form template columns
+stored on a `user_data` record. They are generated from the existing
+`UserDataService` (`src/entities/user_data/ud.service.ts`); no duplicate
+persistence or HTTP client is introduced.
 
-Every document tool requires the UUID of one `user_data` row (`user_id`). There
-is no lookup by `user_name` or by any other field, so a tool call can only read
-or write the explicitly selected user. The one input-free tool,
-`user_data_get_selected_user_uid`, returns the uid of the user that was selected
-through `POST /user-data/select`.
+Every document and template tool requires the UUID of one `user_data` row
+(`user_id`). There is no lookup by `user_name` or by any other field, so a tool
+call can only read or write the explicitly selected user. The one input-free
+tool, `user_data_get_selected_user_uid`, returns the uid of the user that was
+selected through `POST /user-data/select`.
+
+The template tools (`cv_template`, `cover_template`) are read/replace only: they
+have no delete tool and reject empty content, so a stored template can never be
+cleared or removed.
 
 ## Tools
 
@@ -34,9 +38,20 @@ Dedicated per-document tools, so a caller never has to pick a field name:
 | `user_data_get_web_research` | `09-web-research_md` | `UserDataService.findOneById` | `POST /user-data/find` |
 | `user_data_update_web_research` | `09-web-research_md` | `UserDataService.updateUserData` | `PATCH /user-data/web-research-md` |
 
-All thirteen tools are registered by `McpUserDataModule`, which is imported by
+Template tools. These read and replace the stored template content; there is no
+delete tool and empty content is rejected:
+
+| MCP tool | Field read or written | Service call | Equivalent HTTP endpoint |
+| --- | --- | --- | --- |
+| `user_data_get_cv_template` | `cv_template` | `UserDataService.findOneById` | `POST /user-data/find` |
+| `user_data_update_cv_template` | `cv_template` | `UserDataService.updateUserDataCvTemplate` | `PATCH /user-data/cv-template` |
+| `user_data_get_cover_template` | `cover_template` | `UserDataService.findOneById` | `POST /user-data/find` |
+| `user_data_update_cover_template` | `cover_template` | `UserDataService.updateUserDataCoverTemplate` | `PATCH /user-data/cover-template` |
+
+All seventeen tools are registered by `McpUserDataModule`, which is imported by
 `McpServerModule`. `McpUserDataWorker` provides the generic tools and the
 selection tool, `McpUserDataDocumentsWorker` provides the eight dedicated
+document tools, and `McpUserDataTemplatesWorker` provides the four template
 tools. The MCP endpoint is the one configured by `McpModule` (`/mcp` in
 `src/mcp/mcp.module.ts`).
 
@@ -69,6 +84,13 @@ the user was selected before the tool call. Without a selection the tool returns
 | `search-queries_md` | `search_queries_md` | `search-queries.md` | `PATCH /user-data/search-queries-md` |
 
 The public field names match the database column names of `UserDataEntity`.
+
+Template columns are stored as plain `text` and have no markdown file:
+
+| MCP tool | Entity property | Single-field HTTP route |
+| --- | --- | --- |
+| `user_data_get_cv_template` / `user_data_update_cv_template` | `cv_template` | `PATCH /user-data/cv-template` |
+| `user_data_get_cover_template` / `user_data_update_cover_template` | `cover_template` | `PATCH /user-data/cover-template` |
 
 ## Defaults
 
@@ -143,6 +165,28 @@ The dedicated tools take the same `user_id` and, for updates, a single
 }
 ```
 
+Read a template:
+
+```json
+{
+  "user_id": "3f1c2b9e-6d4a-4c1e-9f0a-1b2c3d4e5f60"
+}
+```
+
+Replace a template (the same `user_id` plus `content`; empty content is
+rejected):
+
+```json
+{
+  "user_id": "3f1c2b9e-6d4a-4c1e-9f0a-1b2c3d4e5f60",
+  "content": "% ... LaTeX CV template ..."
+}
+```
+
+Read results for templates contain `field`, `label`, `value` and `is_empty`.
+Update results contain the `UserDataService` mutation fields (`success`,
+`message`, `id`) plus `field`, `label` and `updated: true`.
+
 ## Configuration
 
 No new environment variables are required. The tools use the existing
@@ -157,10 +201,14 @@ behind the deployment's normal access controls.
 ## Side effects and safety
 
 - Update tools overwrite the complete stored document; they never append.
-- An empty string clears a document. `null` is not accepted as content.
+- An empty string clears a markdown document. `null` is not accepted as
+  content.
 - `user_data_update_markdown_fields` rejects duplicate fields before writing.
 - The dedicated get/update tools can only touch their own document; they cannot
   read or write any other field of the row.
+- Template tools (`cv_template`, `cover_template`) can read and replace the
+  stored template, but never delete it: there is no delete tool and empty or
+  whitespace-only content is rejected by `UserDataService`.
 - Only the `user_data` row matching `user_id` is modified. If the UUID does not
   exist, the service raises `NotFoundException` and nothing is written.
 - The tools do not create or delete user data records and do not touch any

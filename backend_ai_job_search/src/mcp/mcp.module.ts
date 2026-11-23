@@ -3,7 +3,6 @@ import { McpModule } from '@nestjs/mcp';
 import { HelloTool } from './tools/mcpTool.service.js';
 import { McpVacWorker } from '@/mcp/tools/mcpWorkers/vacancy/mcpVac.service.js';
 import { McpUserDataModule } from '@/mcp/tools/mcpWorkers/user_data/mcpUserData.module.js';
-import { McpStorageFilesModule } from '@/mcp/tools/mcpWorkers/storage_files/mcpStorageFiles.module.js';
 import { WorkersModule } from '@/common/workers/worker.module.js';
 
 @Module({
@@ -14,8 +13,7 @@ import { WorkersModule } from '@/common/workers/worker.module.js';
       path: '/mcp',
     }),
     forwardRef(() => WorkersModule),
-    McpUserDataModule,
-    McpStorageFilesModule,
+    McpUserDataModule
   ],
   controllers: [],
   providers: [HelloTool],

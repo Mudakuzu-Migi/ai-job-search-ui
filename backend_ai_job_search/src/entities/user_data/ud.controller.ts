@@ -18,14 +18,14 @@ import {
   UpdateCandidateProfileMdDto,
   UpdateClaudeMdDto,
   UpdateCoverLetterTemplatesMdDto,
-  UpdateCoverTemplateUrlDto,
+  UpdateCoverTemplateDto,
+  UpdateCvTemplateDto,
   UpdateCvTemplatesMdDto,
   UpdateEmailDto,
   UpdateImgUrlDto,
   UpdateInterviewPrepMdDto,
   UpdateJobEvaluationMdDto,
   UpdatePhoneDto,
-  UpdateResumeTemplateUrlDto,
   UpdateSearchQueriesMdDto,
   UpdateSocialMediaDto,
   UpdateUserNameDto,
@@ -110,25 +110,23 @@ export class UserDataController {
     );
   }
 
-  @Patch('resume-template-url')
-  async updateResumeTemplateUrl(
-    @Body() updateUserDataDto: UpdateResumeTemplateUrlDto,
-  ) {
-    Logger.log('PATCH', '/user-data/resume-template-url');
-    return await this.userDataService.updateUserDataResumeTemplateUrl(
+  @Patch('cv-template')
+  async updateCvTemplate(@Body() updateUserDataDto: UpdateCvTemplateDto) {
+    Logger.log('PATCH', '/user-data/cv-template');
+    return await this.userDataService.updateUserDataCvTemplate(
       updateUserDataDto.id,
-      updateUserDataDto.resume_template_url,
+      updateUserDataDto.cv_template,
     );
   }
 
-  @Patch('cover-template-url')
-  async updateCoverTemplateUrl(
-    @Body() updateUserDataDto: UpdateCoverTemplateUrlDto,
+  @Patch('cover-template')
+  async updateCoverTemplate(
+    @Body() updateUserDataDto: UpdateCoverTemplateDto,
   ) {
-    Logger.log('PATCH', '/user-data/cover-template-url');
-    return await this.userDataService.updateUserDataCoverTemplateUrl(
+    Logger.log('PATCH', '/user-data/cover-template');
+    return await this.userDataService.updateUserDataCoverTemplate(
       updateUserDataDto.id,
-      updateUserDataDto.cover_template_url,
+      updateUserDataDto.cover_template,
     );
   }
 

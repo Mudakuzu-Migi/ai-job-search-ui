@@ -32,11 +32,11 @@ export class UserDataEntity {
   @Column({ type: 'text', array: true, default: '{}' })
   sources_research: string[];
 
-  @Column({ type: 'varchar', length: 512, nullable: false })
-  resume_template_url: string; // URL of the resume template
+  @Column({ type: 'text', nullable: false, default: '' })
+  cv_template: string; // CV / resume template content
 
-  @Column({ type: 'varchar', length: 512, nullable: false })
-  cover_template_url: string; // URL of the cover letter template
+  @Column({ type: 'text', nullable: false, default: '' })
+  cover_template: string; // Cover letter template content
 
   @Column({ type: 'text', nullable: true, name: 'CLAUDE_md' })
   claude_md: string | null; // Markdown content of CLAUDE.md
