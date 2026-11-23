@@ -10,13 +10,15 @@ import {
 } from 'class-validator';
 
 /**
- * Body for creating a seen job record. `job_key` is the UUID primary key
+ * Body for creating a seen job record. `job_key` is the string primary key
  * supplied by the client and `u_id` selects the owning user; there is no
  * generated identifier.
  */
 export class CreateSeenJobDto {
-  @IsUUID()
-  job_key: string; // UUID primary key of the offer
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  job_key: string; // Client-supplied primary key of the offer
 
   @IsUUID()
   u_id: string; // Owner of the record (user_data.id)

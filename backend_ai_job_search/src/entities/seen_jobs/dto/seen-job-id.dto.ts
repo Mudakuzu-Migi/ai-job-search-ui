@@ -1,15 +1,17 @@
-import { IsUUID } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID, MaxLength } from 'class-validator';
 
 /**
- * Base body for endpoints that target a single seen job by its UUID primary
+ * Base body for endpoints that target a single seen job by its string primary
  * key. The key is sent in the request body instead of the URL path.
  *
  * Read and delete operations use this body only: deleting a record never
  * touches the owning `user_data` row.
  */
 export class SeenJobIdDto {
-  @IsUUID()
-  job_key: string; // UUID primary key of the seen job record
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  job_key: string; // Client-supplied primary key of the seen job record
 }
 
 /**

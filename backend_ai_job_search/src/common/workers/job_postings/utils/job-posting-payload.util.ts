@@ -8,7 +8,7 @@
  * {
  *   "u_id": "<owner uuid>",
  *   "items": [
- *     { "job_key": "<uuid>", "title": "...", "company": "...", "url": "..." }
+ *     { "job_key": "<offer id>", "title": "...", "company": "...", "url": "..." }
  *   ]
  * }
  * ```
@@ -51,6 +51,9 @@ export type JobPostingPayload = {
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/** Maximum length of the `seen_jobs.job_key` varchar(255) column. */
+const JOB_KEY_MAX_LENGTH = 255;
 
 /** Accepted spellings of the owner id (`ID` in the posting pool). */
 const OWNER_FIELDS = ['u_id', 'uID', 'uid', 'ID', 'id'] as const;
@@ -219,8 +222,10 @@ function parsePosting(
 
   const jobKey = readRequiredText(raw, ['job_key', 'jobKey'], 'job_key', context);
 
-  if (!UUID_REGEX.test(jobKey)) {
-    throw new Error(`${context} has an invalid job_key; expected a UUID`);
+  if (jobKey.length > JOB_KEY_MAX_LENGTH) {
+    throw new Error(
+      `${context} has an invalid job_key; expected at most ${JOB_KEY_MAX_LENGTH} characters`,
+    );
   }
 
   return {

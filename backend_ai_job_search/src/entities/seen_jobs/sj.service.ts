@@ -15,6 +15,7 @@ import {
   assertMaxLength,
   assertNonEmptyString,
   assertOptionalStringArray,
+  assertValidJobKey,
   assertValidUuid,
 } from './utils/seen-job-validation.util.js';
 import {
@@ -24,8 +25,8 @@ import {
 
 /**
  * Fields that are allowed to be changed after a seen job has been created.
- * `job_key` is the UUID primary key and `u_id` is the owner, so neither can be
- * edited through an update.
+ * `job_key` is the client-supplied primary key and `u_id` is the owner, so
+ * neither can be edited through an update.
  */
 export type UpdateSeenJobPayload = Partial<
   Omit<CreateSeenJobDto, 'job_key' | 'u_id'>
@@ -54,7 +55,7 @@ export class SeenJobsService {
     seenJobDTO: CreateSeenJobDto,
   ): Promise<SeenJobsMutationResult> {
     assertValidUuid(seenJobDTO.u_id, 'u_id');
-    assertValidUuid(seenJobDTO.job_key, 'job_key');
+    assertValidJobKey(seenJobDTO.job_key);
     assertNonEmptyString(seenJobDTO.title, 'title');
     assertMaxLength(seenJobDTO.title, 255, 'title');
     assertNonEmptyString(seenJobDTO.company, 'company');
@@ -132,7 +133,7 @@ export class SeenJobsService {
 
   @Measure('SeenJobsService')
   async findOneById(jobKey: string): Promise<SeenJobEntity> {
-    assertValidUuid(jobKey, 'job_key');
+    assertValidJobKey(jobKey);
 
     const seenJob = await this.seenJobRepository.findOneBy({
       job_key: jobKey.trim(),
@@ -336,14 +337,14 @@ export class SeenJobsService {
   // ---------------------------------------------------------------- delete
 
   /**
-   * Deletes a seen job by its UUID primary key. Only `job_key` is required:
+   * Deletes a seen job by its string primary key. Only `job_key` is required:
    * the owning `user_data` row is never touched and is never cascaded.
    */
   @Measure('SeenJobsService')
   async deleteSeenJobById(
     jobKey: string,
   ): Promise<{ success: boolean; message: string; job_key: string }> {
-    assertValidUuid(jobKey, 'job_key');
+    assertValidJobKey(jobKey);
 
     const trimmedKey = jobKey.trim();
 
@@ -400,7 +401,7 @@ export class SeenJobsService {
     userId: string,
     patch: UpdateSeenJobPayload,
   ): Promise<SeenJobsMutationResult> {
-    assertValidUuid(jobKey, 'job_key');
+    assertValidJobKey(jobKey);
     assertValidUuid(userId, 'u_id');
 
     const trimmedKey = jobKey.trim();

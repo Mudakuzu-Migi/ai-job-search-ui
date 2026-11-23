@@ -11,14 +11,14 @@ import { UserDataEntity } from '../user_data/ud.entity.js';
 /**
  * A job vacancy that has already been seen by the scraper.
  *
- * `job_key` is a UUID primary key supplied by the client, so the same offer can
- * never be stored twice. Every record also belongs to exactly one `user_data`
- * row through `uID`.
+ * `job_key` is a free-form string primary key supplied by the client (portal
+ * id, hash or slug), so the same offer can never be stored twice. Every record
+ * also belongs to exactly one `user_data` row through `uID`.
  */
 @Entity('seen_jobs')
 export class SeenJobEntity {
-  @PrimaryColumn({ type: 'uuid', nullable: false })
-  job_key: string; // UUID primary key of the offer
+  @PrimaryColumn({ type: 'varchar', length: 255, nullable: false })
+  job_key: string; // Client-supplied primary key of the offer
 
   @Column({ type: 'uuid', name: 'uID', nullable: false })
   u_id: string; // Owner of the record (user_data.id)

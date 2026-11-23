@@ -4,11 +4,24 @@ import { BadRequestException } from '@nestjs/common';
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-/** Ensures a value is a UUID string, used for `job_key` and `u_id`. */
+/** Maximum length of the `job_key` primary key column. */
+export const JOB_KEY_MAX_LENGTH = 255;
+
+/** Ensures a value is a UUID string, used for `u_id`. */
 export function assertValidUuid(value: string, field: string): void {
   if (typeof value !== 'string' || !UUID_REGEX.test(value.trim())) {
     throw new BadRequestException(`${field} must be a valid UUID`);
   }
+}
+
+/**
+ * Ensures a `job_key` is a non-empty string that fits the varchar(255) primary
+ * key column. The key is client-supplied (portal id, hash or slug), so it is
+ * not required to be a UUID.
+ */
+export function assertValidJobKey(value: string): void {
+  assertNonEmptyString(value, 'job_key');
+  assertMaxLength(value.trim(), JOB_KEY_MAX_LENGTH, 'job_key');
 }
 
 /** Ensures a string field is present and not blank. */
