@@ -8,7 +8,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { SeenJobsService } from './sj.service.js';
+import { SeenJobsPoolService } from './sj.pool.service.js';
 import { CreateSeenJobDto } from './dto/create-seen-job.dto.js';
+import { PoolSeenJobsDto } from './dto/pool-seen-jobs.dto.js';
 import { SeenJobIdDto } from './dto/seen-job-id.dto.js';
 import { UpdateSeenJobDto } from './dto/update-seen-job.dto.js';
 import {
@@ -39,7 +41,10 @@ import {
  */
 @Controller('seen-jobs')
 export class SeenJobsController {
-  constructor(private readonly seenJobsService: SeenJobsService) {}
+  constructor(
+    private readonly seenJobsService: SeenJobsService,
+    private readonly seenJobsPoolService: SeenJobsPoolService,
+  ) {}
 
   // ------------------------------------------------------------------ read
 
@@ -60,6 +65,20 @@ export class SeenJobsController {
   async create(@Body() createSeenJobDto: CreateSeenJobDto) {
     Logger.log('POST', '/seen-jobs');
     return await this.seenJobsService.createSeenJob(createSeenJobDto);
+  }
+
+  // ------------------------------------------------------------------ pool
+
+  /**
+   * Single batch entry point for the seen jobs pool. `action: 'pull'`
+   * retrieves up to `limit` seen jobs for the user, `action: 'push'` uploads
+   * up to `limit` seen jobs in one request, creating unknown `job_key` values
+   * and updating the known ones.
+   */
+  @Post('pool')
+  async pool(@Body() dto: PoolSeenJobsDto) {
+    Logger.log('POST', `/seen-jobs/pool action=${dto.action}`);
+    return await this.seenJobsPoolService.runPoolBatch(dto);
   }
 
   // ---------------------------------------------------------------- update
