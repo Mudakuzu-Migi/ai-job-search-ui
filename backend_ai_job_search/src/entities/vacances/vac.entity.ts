@@ -45,10 +45,10 @@ export class VacancyEntity {
   fit_rating: number; // Fit rating score
 
   @Column({ type: 'varchar', length: 500, nullable: true })
-  source: string; // Source URL or link
+  source: string | null; // Source URL or link
 
   @Column({ type: 'text', nullable: true })
-  note: string; // Additional notes (required)
+  note: string | null; // Additional notes (required)
 
   @Column({ type: 'uuid', nullable: true })
   source_cover_latter_id: string | null; // S3 path for cover letter (optional)
@@ -58,7 +58,7 @@ export class VacancyEntity {
 
   @Index('IDX_CHANNEL_HASH', ['chanel'], { type: 'hash' })
   @Column({ type: 'varchar', length: 50, nullable: true })
-  chanel: string; // Communication or application channel (required)
+  chanel: string | null; // Communication or application channel (required)
 
   @ManyToOne(() => StorageFileEntity, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'source_resume_id' })

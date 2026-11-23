@@ -16,7 +16,9 @@ import {
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
 import { TestService } from './vac.service.js';
+import { VacancyPoolService } from './vac.pool.service.js';
 import { CreateVacancyDto } from './dto/create-vac.dto.js';
+import { PoolVacanciesDto } from './dto/pool-vacancies.dto.js';
 import { VacancyIdDto } from './dto/vacancy-id.dto.js';
 import { UpdateVacancyDto } from './dto/update-vac.dto.js';
 import {
@@ -98,7 +100,10 @@ export class JsonBodyInterceptor implements NestInterceptor {
 @Controller('vacances')
 @UseInterceptors(JsonBodyInterceptor)
 export class VacController {
-  constructor(private readonly vacService: TestService) {}
+  constructor(
+    private readonly vacService: TestService,
+    private readonly vacPoolService: VacancyPoolService,
+  ) {}
 
   // ------------------------------------------------------------------ read
 
@@ -119,6 +124,19 @@ export class VacController {
   async create(@Body() createVacDto: CreateVacancyDto) {
     Logger.log('POST', '/vacances');
     return await this.vacService.createVac(createVacDto);
+  }
+
+  // ------------------------------------------------------------------ pool
+
+  /**
+   * Single batch entry point for the vacancy pool. `action: 'pull'` retrieves
+   * up to `limit` postings for the user, `action: 'push'` uploads up to
+   * `limit` postings in one request.
+   */
+  @Post('pool')
+  async pool(@Body() dto: PoolVacanciesDto) {
+    Logger.log('POST', `/vacances/pool action=${dto.action}`);
+    return await this.vacPoolService.runPoolBatch(dto);
   }
 
   // ---------------------------------------------------------------- update
