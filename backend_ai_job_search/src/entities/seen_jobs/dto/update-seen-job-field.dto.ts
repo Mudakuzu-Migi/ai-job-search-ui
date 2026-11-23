@@ -1,5 +1,4 @@
 import {
-  IsArray,
   IsDateString,
   IsInt,
   IsNotEmpty,
@@ -93,51 +92,4 @@ export class UpdateSeenJobRankScoreDto extends SeenJobRefDto {
   @IsOptional()
   @IsInt()
   rank_score: number | null; // Numeric ranking score (null clears it)
-}
-
-export class UpdateSeenJobRankVerdictDto extends SeenJobRefDto {
-  @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  rank_verdict: string | null; // Ranking verdict text (null clears it)
-}
-
-export class UpdateSeenJobRankDateDto extends SeenJobRefDto {
-  @IsOptional()
-  @IsDateString()
-  rank_date: string | null; // Date the offer was ranked (null clears it)
-}
-
-export class UpdateSeenJobLocationVerdictDto extends SeenJobRefDto {
-  @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  location_verdict: string | null; // Location verdict (null clears it)
-}
-
-export class UpdateSeenJobLanguageGateDto extends SeenJobRefDto {
-  @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  language_gate: string | null; // Language gate result (null clears it)
-}
-
-export class UpdateSeenJobLanguageNoteDto extends SeenJobRefDto {
-  @IsOptional()
-  @IsString()
-  language_note: string | null; // Language notes (null clears them)
-}
-
-export class UpdateSeenJobStrengthsDto extends SeenJobRefDto {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  strengths: string[] | null; // Strengths (null clears them)
-}
-
-export class UpdateSeenJobGapsDto extends SeenJobRefDto {
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  gaps: string[] | null; // Gaps (null clears them)
 }

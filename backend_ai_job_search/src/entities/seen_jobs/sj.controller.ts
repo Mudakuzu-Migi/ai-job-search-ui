@@ -16,19 +16,12 @@ import {
   UpdateSeenJobDeadlineDto,
   UpdateSeenJobFirstSeenDto,
   UpdateSeenJobFitDto,
-  UpdateSeenJobGapsDto,
-  UpdateSeenJobLanguageGateDto,
-  UpdateSeenJobLanguageNoteDto,
   UpdateSeenJobLocationDto,
-  UpdateSeenJobLocationVerdictDto,
   UpdateSeenJobPortalDto,
   UpdateSeenJobPostedDateDto,
-  UpdateSeenJobRankDateDto,
   UpdateSeenJobRankScoreDto,
-  UpdateSeenJobRankVerdictDto,
   UpdateSeenJobSourceDto,
   UpdateSeenJobStatusDto,
-  UpdateSeenJobStrengthsDto,
   UpdateSeenJobTitleDto,
   UpdateSeenJobUrlDto,
 } from './dto/update-seen-job-field.dto.js';
@@ -192,84 +185,6 @@ export class SeenJobsController {
       updateSeenJobDto.job_key,
       updateSeenJobDto.u_id,
       updateSeenJobDto.rank_score,
-    );
-  }
-
-  @Patch('rank-verdict')
-  async updateRankVerdict(
-    @Body() updateSeenJobDto: UpdateSeenJobRankVerdictDto,
-  ) {
-    Logger.log('PATCH', '/seen-jobs/rank-verdict');
-    return await this.seenJobsService.updateSeenJobRankVerdict(
-      updateSeenJobDto.job_key,
-      updateSeenJobDto.u_id,
-      updateSeenJobDto.rank_verdict,
-    );
-  }
-
-  @Patch('rank-date')
-  async updateRankDate(@Body() updateSeenJobDto: UpdateSeenJobRankDateDto) {
-    Logger.log('PATCH', '/seen-jobs/rank-date');
-    return await this.seenJobsService.updateSeenJobRankDate(
-      updateSeenJobDto.job_key,
-      updateSeenJobDto.u_id,
-      updateSeenJobDto.rank_date,
-    );
-  }
-
-  @Patch('location-verdict')
-  async updateLocationVerdict(
-    @Body() updateSeenJobDto: UpdateSeenJobLocationVerdictDto,
-  ) {
-    Logger.log('PATCH', '/seen-jobs/location-verdict');
-    return await this.seenJobsService.updateSeenJobLocationVerdict(
-      updateSeenJobDto.job_key,
-      updateSeenJobDto.u_id,
-      updateSeenJobDto.location_verdict,
-    );
-  }
-
-  @Patch('language-gate')
-  async updateLanguageGate(
-    @Body() updateSeenJobDto: UpdateSeenJobLanguageGateDto,
-  ) {
-    Logger.log('PATCH', '/seen-jobs/language-gate');
-    return await this.seenJobsService.updateSeenJobLanguageGate(
-      updateSeenJobDto.job_key,
-      updateSeenJobDto.u_id,
-      updateSeenJobDto.language_gate,
-    );
-  }
-
-  @Patch('language-note')
-  async updateLanguageNote(
-    @Body() updateSeenJobDto: UpdateSeenJobLanguageNoteDto,
-  ) {
-    Logger.log('PATCH', '/seen-jobs/language-note');
-    return await this.seenJobsService.updateSeenJobLanguageNote(
-      updateSeenJobDto.job_key,
-      updateSeenJobDto.u_id,
-      updateSeenJobDto.language_note,
-    );
-  }
-
-  @Patch('strengths')
-  async updateStrengths(@Body() updateSeenJobDto: UpdateSeenJobStrengthsDto) {
-    Logger.log('PATCH', '/seen-jobs/strengths');
-    return await this.seenJobsService.updateSeenJobStrengths(
-      updateSeenJobDto.job_key,
-      updateSeenJobDto.u_id,
-      updateSeenJobDto.strengths,
-    );
-  }
-
-  @Patch('gaps')
-  async updateGaps(@Body() updateSeenJobDto: UpdateSeenJobGapsDto) {
-    Logger.log('PATCH', '/seen-jobs/gaps');
-    return await this.seenJobsService.updateSeenJobGaps(
-      updateSeenJobDto.job_key,
-      updateSeenJobDto.u_id,
-      updateSeenJobDto.gaps,
     );
   }
 

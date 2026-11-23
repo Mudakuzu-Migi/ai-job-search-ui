@@ -35,13 +35,6 @@ export type JobPostingItemPayload = {
   deadline: string | null;
   fit: string | null;
   rank_score: number | null;
-  rank_verdict: string | null;
-  rank_date: string | null;
-  location_verdict: string | null;
-  language_gate: string | null;
-  language_note: string | null;
-  strengths: string[] | null;
-  gaps: string[] | null;
 };
 
 /** Parsed payload: a pool of postings ready for the duplicate check. */
@@ -163,24 +156,6 @@ function readOptionalInt(
   return value;
 }
 
-function readOptionalStringArray(
-  source: Record<string, unknown>,
-  key: string,
-): string[] | null {
-  const value = source[key];
-
-  if (!Array.isArray(value)) {
-    return null;
-  }
-
-  const cleaned = value
-    .filter((entry): entry is string => typeof entry === 'string')
-    .map((entry) => entry.trim())
-    .filter((entry) => entry.length > 0);
-
-  return cleaned.length > 0 ? cleaned : null;
-}
-
 /** Accepts `{ items }` (or a few common aliases) and a bare array. */
 function resolveRawItems(payload: unknown, taskId: string): unknown[] {
   const raw = Array.isArray(payload)
@@ -245,13 +220,6 @@ function parsePosting(
     deadline: readOptionalDate(raw, 'deadline', context),
     fit: readOptionalText(raw, 'fit'),
     rank_score: readOptionalInt(raw, 'rank_score', context),
-    rank_verdict: readOptionalText(raw, 'rank_verdict'),
-    rank_date: readOptionalDate(raw, 'rank_date', context),
-    location_verdict: readOptionalText(raw, 'location_verdict'),
-    language_gate: readOptionalText(raw, 'language_gate'),
-    language_note: readOptionalText(raw, 'language_note'),
-    strengths: readOptionalStringArray(raw, 'strengths'),
-    gaps: readOptionalStringArray(raw, 'gaps'),
   };
 }
 

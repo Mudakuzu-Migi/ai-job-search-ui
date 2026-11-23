@@ -66,25 +66,4 @@ export class SeenJobEntity {
 
   @Column({ type: 'int', nullable: true })
   rank_score: number | null; // Numeric ranking score
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  rank_verdict: string | null; // Ranking verdict text
-
-  @Column({ type: 'date', nullable: true })
-  rank_date: string | null; // Date the offer was ranked
-
-  @Column({ type: 'varchar', length: 255, nullable: true })
-  location_verdict: string | null; // Verdict about the offer location
-
-  @Column({ type: 'varchar', length: 100, nullable: true })
-  language_gate: string | null; // Language gate result
-
-  @Column({ type: 'text', nullable: true })
-  language_note: string | null; // Free-form language notes
-
-  @Column({ type: 'text', array: true, nullable: true })
-  strengths: string[] | null; // Strengths found in the offer
-
-  @Column({ type: 'text', array: true, nullable: true })
-  gaps: string[] | null; // Gaps / missing requirements found in the offer
 }

@@ -1,5 +1,4 @@
 import {
-  IsArray,
   IsDateString,
   IsInt,
   IsNotEmpty,
@@ -77,37 +76,4 @@ export class CreateSeenJobDto {
   @IsOptional()
   @IsInt()
   rank_score?: number | null; // Numeric ranking score
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  rank_verdict?: string | null; // Ranking verdict text
-
-  @IsOptional()
-  @IsDateString()
-  rank_date?: string | null; // Date the offer was ranked (ISO date string)
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  location_verdict?: string | null; // Verdict about the offer location
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  language_gate?: string | null; // Language gate result
-
-  @IsOptional()
-  @IsString()
-  language_note?: string | null; // Free-form language notes
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  strengths?: string[] | null; // Strengths found in the offer
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  gaps?: string[] | null; // Gaps / missing requirements found in the offer
 }

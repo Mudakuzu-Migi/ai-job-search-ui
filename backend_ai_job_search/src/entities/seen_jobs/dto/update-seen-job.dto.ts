@@ -1,5 +1,4 @@
 import {
-  IsArray,
   IsDateString,
   IsInt,
   IsNotEmpty,
@@ -75,37 +74,4 @@ export class UpdateSeenJobDto extends SeenJobRefDto {
   @IsOptional()
   @IsInt()
   rank_score?: number | null; // Numeric ranking score, null clears it
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  rank_verdict?: string | null; // Ranking verdict text, null clears it
-
-  @IsOptional()
-  @IsDateString()
-  rank_date?: string | null; // Date the offer was ranked, null clears it
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(255)
-  location_verdict?: string | null; // Location verdict, null clears it
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  language_gate?: string | null; // Language gate result, null clears it
-
-  @IsOptional()
-  @IsString()
-  language_note?: string | null; // Language notes, null clears them
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  strengths?: string[] | null; // Strengths, null clears them
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  gaps?: string[] | null; // Gaps, null clears them
 }

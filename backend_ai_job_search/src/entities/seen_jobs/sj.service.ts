@@ -14,14 +14,10 @@ import { Measure } from '@/common/services/index.js';
 import {
   assertMaxLength,
   assertNonEmptyString,
-  assertOptionalStringArray,
   assertValidJobKey,
   assertValidUuid,
 } from './utils/seen-job-validation.util.js';
-import {
-  normalizeOptionalStringArray,
-  normalizeOptionalText,
-} from './utils/seen-job-normalizer.util.js';
+import { normalizeOptionalText } from './utils/seen-job-normalizer.util.js';
 
 /**
  * Fields that are allowed to be changed after a seen job has been created.
@@ -67,8 +63,6 @@ export class SeenJobsService {
     assertMaxLength(seenJobDTO.portal, 100, 'portal');
     assertNonEmptyString(seenJobDTO.source, 'source');
     assertMaxLength(seenJobDTO.source, 255, 'source');
-    assertOptionalStringArray(seenJobDTO.strengths, 'strengths');
-    assertOptionalStringArray(seenJobDTO.gaps, 'gaps');
 
     const jobKey = seenJobDTO.job_key.trim();
     const userId = seenJobDTO.u_id.trim();
@@ -100,13 +94,6 @@ export class SeenJobsService {
       portal: seenJobDTO.portal.trim(),
       source: seenJobDTO.source.trim(),
       rank_score: seenJobDTO.rank_score ?? null,
-      rank_verdict: normalizeOptionalText(seenJobDTO.rank_verdict),
-      rank_date: seenJobDTO.rank_date ?? null,
-      location_verdict: normalizeOptionalText(seenJobDTO.location_verdict),
-      language_gate: normalizeOptionalText(seenJobDTO.language_gate),
-      language_note: normalizeOptionalText(seenJobDTO.language_note),
-      strengths: normalizeOptionalStringArray(seenJobDTO.strengths),
-      gaps: normalizeOptionalStringArray(seenJobDTO.gaps),
     });
 
     Logger.log(
@@ -269,71 +256,6 @@ export class SeenJobsService {
     return this.applyUpdate(jobKey, userId, { rank_score: rankScore });
   }
 
-  @Measure('SeenJobsService')
-  async updateSeenJobRankVerdict(
-    jobKey: string,
-    userId: string,
-    rankVerdict: string | null,
-  ): Promise<SeenJobsMutationResult> {
-    return this.applyUpdate(jobKey, userId, { rank_verdict: rankVerdict });
-  }
-
-  @Measure('SeenJobsService')
-  async updateSeenJobRankDate(
-    jobKey: string,
-    userId: string,
-    rankDate: string | null,
-  ): Promise<SeenJobsMutationResult> {
-    return this.applyUpdate(jobKey, userId, { rank_date: rankDate });
-  }
-
-  @Measure('SeenJobsService')
-  async updateSeenJobLocationVerdict(
-    jobKey: string,
-    userId: string,
-    locationVerdict: string | null,
-  ): Promise<SeenJobsMutationResult> {
-    return this.applyUpdate(jobKey, userId, {
-      location_verdict: locationVerdict,
-    });
-  }
-
-  @Measure('SeenJobsService')
-  async updateSeenJobLanguageGate(
-    jobKey: string,
-    userId: string,
-    languageGate: string | null,
-  ): Promise<SeenJobsMutationResult> {
-    return this.applyUpdate(jobKey, userId, { language_gate: languageGate });
-  }
-
-  @Measure('SeenJobsService')
-  async updateSeenJobLanguageNote(
-    jobKey: string,
-    userId: string,
-    languageNote: string | null,
-  ): Promise<SeenJobsMutationResult> {
-    return this.applyUpdate(jobKey, userId, { language_note: languageNote });
-  }
-
-  @Measure('SeenJobsService')
-  async updateSeenJobStrengths(
-    jobKey: string,
-    userId: string,
-    strengths: string[] | null,
-  ): Promise<SeenJobsMutationResult> {
-    return this.applyUpdate(jobKey, userId, { strengths });
-  }
-
-  @Measure('SeenJobsService')
-  async updateSeenJobGaps(
-    jobKey: string,
-    userId: string,
-    gaps: string[] | null,
-  ): Promise<SeenJobsMutationResult> {
-    return this.applyUpdate(jobKey, userId, { gaps });
-  }
-
   // ---------------------------------------------------------------- delete
 
   /**
@@ -478,36 +400,6 @@ export class SeenJobsService {
 
     if (patch.rank_score !== undefined) {
       changes.rank_score = patch.rank_score ?? null;
-    }
-
-    if (patch.rank_verdict !== undefined) {
-      changes.rank_verdict = normalizeOptionalText(patch.rank_verdict);
-    }
-
-    if (patch.rank_date !== undefined) {
-      changes.rank_date = patch.rank_date ?? null;
-    }
-
-    if (patch.location_verdict !== undefined) {
-      changes.location_verdict = normalizeOptionalText(patch.location_verdict);
-    }
-
-    if (patch.language_gate !== undefined) {
-      changes.language_gate = normalizeOptionalText(patch.language_gate);
-    }
-
-    if (patch.language_note !== undefined) {
-      changes.language_note = normalizeOptionalText(patch.language_note);
-    }
-
-    if (patch.strengths !== undefined) {
-      assertOptionalStringArray(patch.strengths, 'strengths');
-      changes.strengths = normalizeOptionalStringArray(patch.strengths);
-    }
-
-    if (patch.gaps !== undefined) {
-      assertOptionalStringArray(patch.gaps, 'gaps');
-      changes.gaps = normalizeOptionalStringArray(patch.gaps);
     }
 
     if (Object.keys(changes).length === 0) {
